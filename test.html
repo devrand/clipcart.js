@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+</style>
+<link href="css/clip.css" rel="stylesheet" type="text/css" />
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/clip.js"></script>
+
+<body>
+<div class="circle" id="clipboard">0</div>
+
+
+
+<script>
+
+
+
+// testing 
+var c = new Clipboard('#clipboard' ); // Clipboard object must follow creation of data nodes 
+
+
+
+var test_data = [	{name:'Номер 1', i:{val:1} }, 
+					{name:'Номер 2', i:{val:2} },
+					{name:'Номер 3', i:{val:3} },
+					{name:'Номер 4', i:{val:4} },
+					{name:'Номер 5', i:{val:5} },
+]
+
+
+
+d3.select('body').selectAll('div.item')
+	.data(test_data)
+	.enter().append('div')
+      .attr("class", "item")
+			.html(function(d){return d.name});
+
+
+c.add_nodes('div.item');
+
+
+</script>

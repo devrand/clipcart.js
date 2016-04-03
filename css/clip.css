@@ -1,0 +1,42 @@
+.circle {
+	display:table-cell;
+	text-align: center;
+	vertical-align: middle;
+	border-radius: 50%;
+	width: 50px;
+	height: 50px; 
+	cursor: pointer;/*
+	background-image: url("g4.png");
+	background-repeat: no-repeat;
+	background-position: center;
+*/
+	font-family: Arial;
+	font-weight: bold;
+	position: fixed;
+	top: 90%;
+	left: 2%;
+	/* width and height can be anything, as long as they're equal */
+
+	line-height: 50px;
+  background: rgb(54, 25, 25); /* Fall-back for browsers that don't
+                                    support rgba */
+  background: rgba(54, 25, 25, .1);
+}
+
+
+div.tooltip {   
+  position: absolute;           
+  text-align: center;           
+  width: 150px;                  
+  height: 100px;                 
+  padding: 2px;             
+  font: 12px sans-serif;        
+  background: lightsteelblue;   
+  border: 0px;      
+  border-radius: 8px;           
+  pointer-events: none;         
+
+}
+
+
+
