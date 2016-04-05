@@ -14,11 +14,11 @@ var clp = new Clipcart('#clipboard');  // create Clipcart, add div with an id of
 ...
 // somewhere in your code ...
 // after creating from your data ( with d3.js) set of elements (with a CSS class "poi", for example)
-clp.add_nodes(".poi"); // now data embedded in these elements of interest will be added to  Clipcart object if you click on it
+clp.add_nodes(".poi"); // now data embedded in these elements of interest will be added to  Clipcart object if you click on such element
 ```
 Now if you will work with a datavis  (and hopefully collecting some interesting points), you could download them in CSV file by clicking on #clipboard div on your page
 
-[Example](http://texty.org.ua/d/nadra/) (Click on rectangle, click on some areas on map, look at a gray circle at upper left, then click on that circle to download data in CSV)
+[Live usage example](http://texty.org.ua/d/nadra/) (Click on rectangle, click on some areas on map, look at a gray circle at upper left, then click on that circle to download data in CSV)
 
 
 # More detailed API
