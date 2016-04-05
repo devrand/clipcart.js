@@ -4,7 +4,7 @@ There is a common pattern when you explore data visualization with many differen
 details about what you've found. After some combination of 
 filters/searches/interactions how could you save interesting "data points", or interesting records from results what you've obtained? You have to do some kind of notes and that's annoing. 
 
-What's it, clipcart.js is a very simple class which you could add to your (d3-based) dataviz. The name is a mix of clipboard and e-commerce cart, for obvious reasons. 
+That is, clipcart.js is a very simple class which you could add to your (d3-based) dataviz. The name is a mix of clipboard and e-commerce cart, for obvious reasons. 
 
 # Simplest way to use
 
