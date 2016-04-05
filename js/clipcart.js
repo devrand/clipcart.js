@@ -1,6 +1,6 @@
 (function(){
 
-// utils 
+// Utils 
 // next three function stolen somewhere from SO
 
 function flatten(obj) { // yes, flatten multi-level object into one-level js hash
@@ -13,7 +13,7 @@ function flatten(obj) { // yes, flatten multi-level object into one-level js has
   return rez;
 }
 
-// we need some kind of universal uniq id to index each datapoints in clipboard(to avoid doubling the same point etc ). I will use this hash function on all values in data object  
+// we need some kind of uniq id to index each datapoints in clipboard (to avoid doubling the same point etc ). 
 function hash(str) {  
   var hash = 0, i, chr, len;
   if (str.length === 0) return hash;
@@ -25,7 +25,7 @@ function hash(str) {
   return hash;
 };
 
-//  "generate" CSV file with Blob object. Don't know about sie limits for a file, though
+//  "generate" CSV file from Blob object. Don't know about sie limits for a file, though
 function export_csv(rows, header, filename) {
         var processRow = function (row) {
             var finalVal = '';
@@ -79,13 +79,13 @@ function export_csv(rows, header, filename) {
 * @item_selector - css selector for nodes with data we want to copy to Clipcart (your apps specific)
 * @fields - subset of all keys from data object that we want to save (they will be a column names in resulting CSV file )  
 */
-function Clipcart(clipboard_selector, item_selector, fields){
+function Clipcart(clipboard_selector, item_selector, fields, message){
   this.sel = clipboard_selector;
-	this.data_sel = item_selector;
-	this.fields = fields || [] ;
-
-  this.clipboard_node();
-  if(this.data_sel) this.add_nodes(this.data_sel);
+  this.data_sel = item_selector;
+  this.fields = fields || [] ;  // select which values to save as CSV columns
+  this.message = message || '';
+  this.clipboard_node(); // create node in DOM
+  if(this.data_sel) this.add_nodes(this.data_sel); // these nodes we could save to Clipcart
 
 }
 
@@ -110,7 +110,7 @@ Clipcart.prototype = {
 	},  
 
 	
-	add: function(sel){  // add datapoint to clipboard, change download link
+	add: function(sel){  // add data point to clipboard, change download link
 		var data_point = this.acc(d3.select(sel).datum()); //shape data from DOM node (initial node data is an expression inside acc() call)
 		key = data_point[0]; 
 		data_point = data_point[1];	
@@ -128,8 +128,8 @@ Clipcart.prototype = {
 		var data = d3.values(this.data).map(function(d){return d3.values(d)}  )		// prepare array of rows for CSV 	
 
 		function prepare_link(data, fields){
-			return function(){
-				export_csv(data, fields,  document.title.split(' ').slice(0, 2).join('_') + '_' + 
+			return function(){ // name for CSV file consists of first 3 words from page title and Date
+				export_csv(data, fields,  document.title.split(' ').slice(0, 3).join('_') + '_' +  
 						new Date().toString().replace(/ /g, '_')+'.csv');
         //obj.reset();
 			}
@@ -142,17 +142,17 @@ Clipcart.prototype = {
 	add_nodes: function(selector){ // select all nodes with @selector and add click handlers to each (to enable adding data to clipboard) 
 	      this.data_sel = selector;
 	      d3.selectAll(selector) 
-		.on('click.ctrlc', (function(clipboard){ return function(){ clipboard.add(this)} })(this) )
+		  .on('click.ctrlc', (function(clipboard){ return function(){ clipboard.add(this)} })(this) )
 	},
 
-	  // ui methods
 
+	// UI methods
 	clipboard_node: function(){
 	      d3.select('body')
-		.append('div')
-		.attr('class', 'clip_circle') // must be same as  in css/clip.css
-		.attr('id', this.sel.substr(1)) // remove first "#" in selector
-		.text('0');
+		  .append('div')
+		  .attr('class', 'clip_circle') // must be same as  in css/clip.css
+		  .attr('id', this.sel.substr(1)) // remove first "#" in selector
+		  .text('0');
 
 	      this.help_window();  
 	},
@@ -163,7 +163,7 @@ Clipcart.prototype = {
 	},
 
 	help_window: function(){
-
+        var msg = this.message;
 		var div = d3.select("body").append("div")   
     		.attr("class", "clip_tooltip")               
     		.style("opacity", 0);
@@ -172,7 +172,7 @@ Clipcart.prototype = {
             div.transition()        
                 .duration(200)      
                 .style("opacity", .9);      
-            div.html("<h3>Експорт</h3> Клікніть на це коло, щоб зберегти дані, які вас зацікавили, у CSV файл")  
+            div.html(msg)  
                 .style("left", (d3.event.pageX) - 180 + "px")     
                 .style("top", (d3.event.pageY ) + "px");    
             })                  
