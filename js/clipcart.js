@@ -1,7 +1,9 @@
 (function(){
 
 // utils 
-function flatten(obj) {
+// next three function stolen somewhere from SO
+
+function flatten(obj) { // yes, flatten multi-level object into one-level js hash
   var rez = arguments[1] || {}, name;
   for (name in obj) {
     if (obj.hasOwnProperty(name)) {
@@ -11,8 +13,8 @@ function flatten(obj) {
   return rez;
 }
 
-// next two function stolen somewhere from SO
-function hash(str) {  // we need hash to create an unique index for each datapoint
+// we need some kind of universal uniq id to index each datapoints in clipboard(to avoid doubling the same point etc ). I will use this hash function on all values in data object  
+function hash(str) {  
   var hash = 0, i, chr, len;
   if (str.length === 0) return hash;
   for (i = 0, len = str.length; i < len; i++) {
@@ -23,7 +25,7 @@ function hash(str) {  // we need hash to create an unique index for each datapoi
   return hash;
 };
 
-
+//  "generate" CSV file with Blob object. Don't know about sie limits for a file, though
 function export_csv(rows, header, filename) {
         var processRow = function (row) {
             var finalVal = '';
@@ -73,39 +75,34 @@ function export_csv(rows, header, filename) {
 // main class
 /*
 * 
-* @clipboard_selector - css selector for Clipboard's node (i.e. #clipboard) 
-* @item_selector - css selector for nodes with data we want to copy to Clipboard
-* @fields - subset of all keys from data object that we want to save (also they will be a column names in CSV file )  
+* @clipboard_selector - css selector for Clipcart's node (i.e. #clipboard) 
+* @item_selector - css selector for nodes with data we want to copy to Clipcart (your apps specific)
+* @fields - subset of all keys from data object that we want to save (they will be a column names in resulting CSV file )  
 */
-function Clipboard(clipboard_selector, item_selector, fields){
- // if ( this instanceof Clipboard ) {
+function Clipcart(clipboard_selector, item_selector, fields){
   this.sel = clipboard_selector;
 	this.data_sel = item_selector;
 	this.fields = fields || [] ;
 
-	this.help_window();
-
-  // attach onclick handlers to nodes of interest. nodes could have additional onclick callbacks, becouse we use custom namespace (click.ctrlc)  
-  // see i.e. https://github.com/mbostock/d3/wiki/Selections#on
+  this.clipboard_node();
   if(this.data_sel) this.add_nodes(this.data_sel);
-  
- // } else 
- //   return new Clipboard(clipboard_selector, item_selector, fields);
+
 }
 
 
 
-Clipboard.prototype = {
+Clipcart.prototype = {
+
 	data: {}, // keys are (hopefully) unique hashes, values are datapoints
 	sel: '', // could be changed to any value
 	data_sel: '', // selectors for nodes in DOM to which data is appended
 	
 
-	acc: function(datapoint){ // accessor, must return [key, datapoint(flattened and selected data)]
+	acc: function(datapoint){ // accessor, must return [key, datapoint(flattened and selected data)]. don't touch this
 	
 		// 1. flatten object
 		var flat_obj = flatten(datapoint), rez = {}, fields;
-		// 2. if there is no columns specified for Clipboard, take it all
+		// 2. if there is no columns specified for Clipcart, take it all
 		this.fields = this.fields.length === 0 ? d3.keys(flat_obj) : this.fields;
 		// look for each field name in this.fields use it as a key in our flatten object
 		this.fields.forEach( function(name){ rez[name] =  typeof flat_obj[name] === 'undefined' ? '' : flat_obj[name]; })
@@ -132,7 +129,8 @@ Clipboard.prototype = {
 
 		function prepare_link(data, fields){
 			return function(){
-				export_csv(data, fields,  document.title + '_'+new Date().toString().replace(/ /g, '_')+'.csv');
+				export_csv(data, fields,  document.title.split(' ').slice(0, 2).join('_') + '_' + 
+						new Date().toString().replace(/ /g, '_')+'.csv');
         //obj.reset();
 			}
 		}
@@ -141,40 +139,51 @@ Clipboard.prototype = {
 
 	},
 
-  add_nodes: function(selector){ // select all nodes with @selector and add click handlers to each (to enable adding data to clipboard) 
-      d3.selectAll(selector) 
-        .on('click.ctrlc', (function(clipboard){ return function(){ clipboard.add(this)} })(this) )
-  },
+	add_nodes: function(selector){ // select all nodes with @selector and add click handlers to each (to enable adding data to clipboard) 
+	      this.data_sel = selector;
+	      d3.selectAll(selector) 
+		.on('click.ctrlc', (function(clipboard){ return function(){ clipboard.add(this)} })(this) )
+	},
 
-  // ui methods
-	change_number: function(){ // change indicator for number of rows in clipboard 
+	  // ui methods
+
+	clipboard_node: function(){
+	      d3.select('body')
+		.append('div')
+		.attr('class', 'clip_circle') // must be same as  in css/clip.css
+		.attr('id', this.sel.substr(1)) // remove first "#" in selector
+		.text('0');
+
+	      this.help_window();  
+	},
+
+
+	change_number: function(){ // change indicator for number of rows in clipboard    
  		d3.select(this.sel).html(d3.keys(this.data).length);
 	},
 
-/*
-  reset: function(){
-    this.data = {};
-    this.change_number();
-  },
-*/
 	help_window: function(){
 
 		var div = d3.select("body").append("div")   
-    		.attr("class", "tooltip")               
+    		.attr("class", "clip_tooltip")               
     		.style("opacity", 0);
 
 		d3.select(this.sel).on("mouseover", function(d) {      
             div.transition()        
                 .duration(200)      
                 .style("opacity", .9);      
-            div.html("<h3>Clipboard</h3> Клікніть на коло, щоб зберегти дані, які вас зацікавили, у csv файл")  
-                .style("left", (d3.event.pageX) + "px")     
-                .style("top", (d3.event.pageY - 110) + "px");    
+            div.html("<h3>Експорт</h3> Клікніть на це коло, щоб зберегти дані, які вас зацікавили, у CSV файл")  
+                .style("left", (d3.event.pageX) - 180 + "px")     
+                .style("top", (d3.event.pageY ) + "px");    
             })                  
         .on("mouseout", function(d) {       
             div.transition()        
                 .duration(500)      
-                .style("opacity", 0);   
+                .style("opacity", 0); 
+
+            d3.select(this) // show help window only one time ...
+              .on("mouseover", null)
+              .on("mouseout", null);    
         });
 
 	}
@@ -182,7 +191,7 @@ Clipboard.prototype = {
 };	
 
 // define globally
-window.Clipboard = Clipboard;
+window.Clipcart = Clipcart;
 
 
 })();

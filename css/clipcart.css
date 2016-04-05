@@ -1,4 +1,4 @@
-.circle {
+.clip_circle {
 	display:table-cell;
 	text-align: center;
 	vertical-align: middle;
@@ -13,8 +13,8 @@
 	font-family: Arial;
 	font-weight: bold;
 	position: fixed;
-	top: 90%;
-	left: 2%;
+	top: 60px;
+	right: 50px;
 	/* width and height can be anything, as long as they're equal */
 
 	line-height: 50px;
@@ -24,7 +24,7 @@
 }
 
 
-div.tooltip {   
+div.clip_tooltip {   
   position: absolute;           
   text-align: center;           
   width: 150px;                  
@@ -39,4 +39,8 @@ div.tooltip {
 }
 
 
-
+.clip_tooltip h3{
+	font-size: 14px;
+	margin-top: 10px;
+	font-family: Arial;
+}
