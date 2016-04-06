@@ -77,7 +77,8 @@ function export_csv(rows, header, filename) {
 * 
 * @clipboard_selector - css selector for Clipcart's node (i.e. #clipboard) 
 * @item_selector - css selector for nodes with data we want to copy to Clipcart (your apps specific)
-* @fields - subset of all keys from data object that we want to save (they will be a column names in resulting CSV file )  
+* @fields - subset of all keys from data object that we want to save (they will be a column names in resulting CSV file ) 
+* @message - text for one-time tooltip for Clipcart node
 */
 function Clipcart(clipboard_selector, item_selector, fields, message){
   this.sel = clipboard_selector;
@@ -97,9 +98,9 @@ Clipcart.prototype = {
 	sel: '', // could be changed to any value
 	data_sel: '', // selectors for nodes in DOM to which data is appended
 	
-
-	acc: function(datapoint){ // accessor, must return [key, datapoint(flattened and selected data)]. don't touch this
-	
+	// accessor, must return [key, datapoint(flattened and selected data)]. don't touch this
+	acc: function(datapoint){
+		
 		// 1. flatten object
 		var flat_obj = flatten(datapoint), rez = {}, fields;
 		// 2. if there is no columns specified for Clipcart, take it all
@@ -109,8 +110,8 @@ Clipcart.prototype = {
 		return [ hash(d3.values(rez).join()), rez]; // create hash from each value in datapoint
 	},  
 
-	
-	add: function(sel){  // add data point to clipboard, change download link
+	// add data point to clipcart, change download link
+	add: function(sel){  
 		var data_point = this.acc(d3.select(sel).datum()); //shape data from DOM node (initial node data is an expression inside acc() call)
 		key = data_point[0]; 
 		data_point = data_point[1];	
@@ -124,14 +125,13 @@ Clipcart.prototype = {
 	
 	},
 
-	download_link: function(){ // generate new download link after each "copy" to our clipboard
+	download_link: function(){ // generate new download link after each "copy" to clipcart
 		var data = d3.values(this.data).map(function(d){return d3.values(d)}  )		// prepare array of rows for CSV 	
 
 		function prepare_link(data, fields){
 			return function(){ // name for CSV file consists of first 3 words from page title and Date
 				export_csv(data, fields,  document.title.split(' ').slice(0, 3).join('_') + '_' +  
 						new Date().toString().replace(/ /g, '_')+'.csv');
-        //obj.reset();
 			}
 		}
 
@@ -139,9 +139,10 @@ Clipcart.prototype = {
 
 	},
 
-	add_nodes: function(selector){ // select all nodes with @selector and add click handlers to each (to enable adding data to clipboard) 
+	// select all nodes with @selector and add click handlers to each (to enable adding data to clipboard)
+	add_nodes: function(selector){  
 	      this.data_sel = selector;
-	      d3.selectAll(selector) 
+	      d3.selectAll(selector) // note 'click.ctrlc' -second part of event name is to keep existing handlers for this event
 		  .on('click.ctrlc', (function(clipboard){ return function(){ clipboard.add(this)} })(this) )
 	},
 
