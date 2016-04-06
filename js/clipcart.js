@@ -72,9 +72,9 @@ function export_csv(rows, header, filename) {
     }
 
 
-// main class
+
 /*
-* 
+* Main class
 * @clipboard_selector - css selector for Clipcart's node (i.e. #clipboard) 
 * @item_selector - css selector for nodes with data we want to copy to Clipcart (your apps specific)
 * @fields - subset of all keys from data object that we want to save (they will be a column names in resulting CSV file ) 
@@ -97,6 +97,16 @@ Clipcart.prototype = {
 	data: {}, // keys are (hopefully) unique hashes, values are datapoints
 	sel: '', // could be changed to any value
 	data_sel: '', // selectors for nodes in DOM to which data is appended
+
+
+	// select all nodes with @selector and add click handlers to each (to enable adding data to clipboard)
+	// this shoud be a sole public method for our class 
+	add_nodes: function(selector){  
+	      this.data_sel = selector;
+	      d3.selectAll(selector) // note 'click.ctrlc' -second part of event name is to keep existing handlers for this event
+		  .on('click.ctrlc', (function(clipboard){ return function(){ clipboard.add(this)} })(this) )
+	},
+
 	
 	// accessor, must return [key, datapoint(flattened and selected data)]. don't touch this
 	acc: function(datapoint){
@@ -138,14 +148,6 @@ Clipcart.prototype = {
 		d3.select(this.sel).on("click", prepare_link(data, this.fields) );  		
 
 	},
-
-	// select all nodes with @selector and add click handlers to each (to enable adding data to clipboard)
-	add_nodes: function(selector){  
-	      this.data_sel = selector;
-	      d3.selectAll(selector) // note 'click.ctrlc' -second part of event name is to keep existing handlers for this event
-		  .on('click.ctrlc', (function(clipboard){ return function(){ clipboard.add(this)} })(this) )
-	},
-
 
 	// UI methods
 	clipboard_node: function(){
