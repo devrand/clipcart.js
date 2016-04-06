@@ -7,18 +7,10 @@
 <script src="js/clipcart.js"></script>
 
 <body>
-
-
-
-
 <script>
-
-
 
 // testing 
 var c = new Clipcart('#clipboard' ); 
-
-
 
 var test_data = [	
 	{name:'Datapoint #1', i:{val:1} }, 
@@ -28,17 +20,13 @@ var test_data = [
 	{name:'Datapoint #5', i:{val:5} },
 ]
 
-
-
 d3.select('body').selectAll('div.item')
 	.data(test_data)
 	.enter().append('div')
         .attr("class", "item")
 	.html(function(d){return d.name});
 
-
 // after this line our Clipcart object will save data for each datapoint you've clicked 
 c.add_nodes('div.item');
-
 
 </script>
