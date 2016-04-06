@@ -17,7 +17,8 @@ var clp = new Clipcart('#clipboard');  // create Clipcart, add div with an id of
 clp.add_nodes(".poi"); // now data embedded in these elements of interest will be added to  Clipcart object if you click on such element
 ```
 Now if you are working with a datavis  (and hopefully collecting some interesting points), you could download them in CSV file by clicking on #clipboard div on your page (by default it looks like a gray circle with number of collected points inside)
-[Live usage example](http://texty.org.ua/d/nadra/) (Click on rectangle, click on some areas on map, look at a gray circle at upper left, then click on that circle to download data in CSV)
+
+[Live usage example](http://texty.org.ua/d/nadra/) - in this case, data point of interest is an oil/gas area  with all details. You could click on it on map.  (Click on rectangle, click on some areas on map, look at a gray circle at upper left, then click on that circle to download saved data for oil/gas areas in CSV format)
 
 # Features
 * download results as CSV file
