@@ -12,15 +12,16 @@
 // testing 
 var c = new Clipcart('#clipboard' ); 
 
+// it's just dumb testing data
 var test_data = [	
-	{name:'Datapoint #1', i:{val:1} }, 
+	{name:'Datapoint #1', i:{val:1} }, // data object could have any number of hierarchy levels
 	{name:'Datapoint #2', i:{val:2} },
 	{name:'Datapoint #3', i:{val:3} },
 	{name:'Datapoint #4', i:{val:4} },
 	{name:'Datapoint #5', i:{val:5} },
 ]
 
-d3.select('body').selectAll('div.item')
+d3.select('body').selectAll('div.item') // create divs with datapoints
 	.data(test_data)
 	.enter().append('div')
         .attr("class", "item")
