@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+  div#container{
+	cursor: pointer;
+	font-family: Arial;
+	left: 40%;
+	line-height: 25px;
+	position: absolute;
+	top: 10%;
+  }
 </style>
 <link href="css/clipcart.css" rel="stylesheet" type="text/css" />
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="js/clipcart.js"></script>
 
 <body>
+<div id="container"></div>
+
 <script>
 
 // testing 
-var c = new Clipcart('#clipboard' ); 
+var c = new Clipcart('#clipboard', null, null, 'Some helpful message' ); 
 
 // it's just dumb testing data
 var test_data = [	
@@ -21,7 +31,7 @@ var test_data = [
 	{name:'Datapoint #5', i:{val:5} },
 ]
 
-d3.select('body').selectAll('div.item') // create divs with datapoints
+d3.select('div#container').selectAll('div.item') // create divs with datapoints
 	.data(test_data)
 	.enter().append('div')
         .attr("class", "item")
