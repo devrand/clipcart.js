@@ -18,7 +18,7 @@ clp.add_nodes(".poi"); // now data embedded in these elements of interest will b
 ```
 Now if you are working with a datavis  (and hopefully collecting some interesting points), you could download them in CSV file by clicking on #clipboard div on your page (by default it looks like a gray circle with number of collected points inside)
 
-[Live usage example](http://texty.org.ua/d/nadra/) - in this case, data point of interest is an oil/gas area  with all details. You could click on it on map.  (Click on rectangle, click on some areas on map, look at a gray circle at upper left, then click on that circle to download saved data for oil/gas areas in CSV format)
+[Live usage example](http://texty.org.ua/d/nadra/) - in this case, data point of interest is an oil/gas deposit  with all details. You could click it on map to add info to clipcart (click on rectangle, click on some areas on map, look at a gray circle at upper left, then click on that circle to download saved data for oil/gas areas in CSV format)
 
 # Features
 * download results as CSV file
@@ -27,4 +27,5 @@ Now if you are working with a datavis  (and hopefully collecting some interestin
 * Non-flat, multi-hierarhy data structures will be flatted out to one-level object before they added to clipcart
 
 # More detailed API
-...todo
+At this moment, just look at arguments for Clipcart constructor in clipcart.js
+...
