@@ -14,7 +14,9 @@ var clp = new Clipcart('#clipboard');  // create Clipcart, add div with an id of
 ...
 // somewhere in your code ...
 // after creating from your data ( with d3.js) set of elements (with a CSS class "poi", for example)
-clp.add_nodes(".poi"); // now data embedded in these elements of interest will be added to  Clipcart object if you click on such element
+clp.add_nodes(".poi"); // now data embedded in these elements of interest 
+                       // will be added to  Clipcart object if you click(this is default) on such element
+                       // ... you could add your own code for other events, of course
 ```
 Now if you are working with a datavis  (and hopefully collecting some interesting points), you could download them in CSV file by clicking on #clipboard div on your page (by default it looks like a gray circle with number of collected points inside)
 
